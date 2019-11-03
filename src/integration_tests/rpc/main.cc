@@ -10,7 +10,6 @@
 #include "integration_tests/demo_service.smf.fb.h"
 #include "integration_tests/non_root_port.h"
 #include "smf/histogram_seastar_utils.h"
-#include "smf/load_channel.h"
 #include "smf/load_generator.h"
 #include "smf/log.h"
 #include "smf/random.h"
@@ -63,7 +62,7 @@ struct method_callback {
 
 struct generator {
   smf::rpc_envelope
-  operator()(const boost::program_options::variables_map &cfg) {
+  operator()(seastar::semaphore& sem, const boost::program_options::variables_map &cfg) {
     smf::rpc_typed_envelope<smf_gen::demo::Request> req;
     req.data->name = kPoem;
     return req.serialize_data();

@@ -3,15 +3,23 @@
 
 namespace smf_gen.demo;
 
+table buf {
+  data: [byte];
+}
+
+table fragbuf {
+  data: [buf];
+}
+
 table Request {
-  name: string;
+  data: fragbuf;
 }
 
 table Response {
-  name: string;
+  data: fragbuf;
 }
 
-struct c1 {
+table c1 {
   a: uint;
   b: uint;
   c: uint;

@@ -21,8 +21,6 @@ class storage_service final : public smf_gen::demo::SmfStorage {
   virtual seastar::future<smf::rpc_typed_envelope<smf_gen::demo::Response>>
   Get(smf::rpc_recv_typed_context<smf_gen::demo::Request> &&rec) final {
     smf::rpc_typed_envelope<smf_gen::demo::Response> data;
-    // return the same payload
-    if (rec) { data.data->name = rec->name()->c_str(); }
     data.envelope.set_status(200);
     return seastar::make_ready_future<
       smf::rpc_typed_envelope<smf_gen::demo::Response>>(std::move(data));
