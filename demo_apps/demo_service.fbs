@@ -41,7 +41,7 @@ table c4 {
   d: uint;
 }
 table c5 {
-  x: c3;
+  x: c4;
   a: uint;
   b: uint;
   c: uint;

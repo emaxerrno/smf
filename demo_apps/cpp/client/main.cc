@@ -40,6 +40,38 @@ static const char *kPayload1Kbytes =
   "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
   "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
+inline smf_gen::demo::payloadT
+payload() {
+  auto c1 = []() { return smf_gen::demo::c1(); };
+  auto c2 = [&]() {
+    smf_gen::demo::c2T ret;
+    ret.x = std::make_unique<smf_gen::demo::c1>(c1());
+    return ret;
+  };
+  auto c3 = [&]() {
+    smf_gen::demo::c3T ret;
+    ret.x = std::make_unique<smf_gen::demo::c2T>(c2());
+    return ret;
+  };
+  auto c4 = [&]() {
+    smf_gen::demo::c4T ret;
+    ret.x = std::make_unique<smf_gen::demo::c3T>(c3());
+    return ret;
+  };
+  auto c5 = [&]() {
+    smf_gen::demo::c5T ret;
+    ret.x = std::make_unique<smf_gen::demo::c4T>(c4());
+    return ret;
+  };
+  smf_gen::demo::payloadT ret;
+  ret.one = std::make_unique<smf_gen::demo::c1>(c1());
+  ret.two = std::make_unique<smf_gen::demo::c2T>(c2());
+  ret.three = std::make_unique<smf_gen::demo::c3T>(c3());
+  ret.four = std::make_unique<smf_gen::demo::c4T>(c4());
+  ret.five = std::make_unique<smf_gen::demo::c5T>(c5());
+  return ret;
+}
+
 // This is just for the load generation.
 // On normal apps you would just do
 // client-><method_name>(params).then().then()
@@ -63,10 +95,12 @@ struct generator {
       smf::rpc_typed_envelope<smf_gen::demo::Request> req;
       req.data->name = kPayload1Kbytes;
       return req.serialize_data();
-    } else if (test == 1) {
+    } else if (test == 2) {
       smf::rpc_typed_envelope<smf_gen::demo::ComplexRequest> req;
+      req.data->data = std::make_unique<smf_gen::demo::payloadT>(payload());
       return req.serialize_data();
     }
+    throw std::runtime_error("invalid test case, must be 1, or 2");
   }
 };
 
