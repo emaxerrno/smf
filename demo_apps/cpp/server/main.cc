@@ -27,6 +27,16 @@ class storage_service final : public smf_gen::demo::SmfStorage {
     return seastar::make_ready_future<
       smf::rpc_typed_envelope<smf_gen::demo::Response>>(std::move(data));
   }
+  virtual seastar::future<
+    smf::rpc_typed_envelope<smf_gen::demo::ComplexResponse>>
+  GetComplex(
+    smf::rpc_recv_typed_context<smf_gen::demo::ComplexRequest> &&rec) final {
+    // do nothing
+    smf::rpc_typed_envelope<smf_gen::demo::ComplexResponse> data;
+    data.envelope.set_status(200);
+    return seastar::make_ready_future<
+      smf::rpc_typed_envelope<smf_gen::demo::ComplexResponse>>(std::move(data));
+  }
 };
 
 void

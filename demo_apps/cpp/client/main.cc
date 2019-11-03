@@ -58,9 +58,15 @@ struct method_callback {
 struct generator {
   smf::rpc_envelope
   operator()(const boost::program_options::variables_map &cfg) {
-    smf::rpc_typed_envelope<smf_gen::demo::Request> req;
-    req.data->name = kPayload1Kbytes;
-    return req.serialize_data();
+    uint32_t test = cfg["test-case"].as<uint32_t>();
+    if (test == 1) {
+      smf::rpc_typed_envelope<smf_gen::demo::Request> req;
+      req.data->name = kPayload1Kbytes;
+      return req.serialize_data();
+    } else if (test == 1) {
+      smf::rpc_typed_envelope<smf_gen::demo::ComplexRequest> req;
+      return req.serialize_data();
+    }
   }
 };
 
@@ -72,6 +78,9 @@ cli_opts(boost::program_options::options_description_easy_init o) {
     "ip to connect to");
 
   o("port", po::value<uint16_t>()->default_value(20776), "port for service");
+
+  o("test-case", po::value<uint32_t>()->default_value(1),
+    "1: large payload, 2: complex struct");
 
   o("req-num", po::value<uint32_t>()->default_value(1000),
     "number of request per concurrenct connection");

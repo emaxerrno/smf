@@ -11,9 +11,63 @@ table Response {
   name: string;
 }
 
+struct c1 {
+  a: uint;
+  b: uint;
+  c: uint;
+  d: uint;
+}
+
+table c2 {
+  x: c1;
+  a: uint;
+  b: uint;
+  c: uint;
+  d: uint;
+}
+
+table c3 {
+  x: c2;
+  a: uint;
+  b: uint;
+  c: uint;
+  d: uint;
+}
+table c4 {
+  x: c3;
+  a: uint;
+  b: uint;
+  c: uint;
+  d: uint;
+}
+table c5 {
+  x: c3;
+  a: uint;
+  b: uint;
+  c: uint;
+  d: uint;
+}
+table payload {
+  one: c1;   // 4 fields
+  two: c2;   // 8 fields
+  three: c3; // 16 fields
+  four: c4;  // 32 fields
+  five: c5;  // 64 fields
+}
+table ComplexRequest {
+  // 128 fields
+  data: payload;
+}
+table ComplexResponse {
+  x: uint;
+}
+
+
+
 
 rpc_service SmfStorage {
   Get(Request):Response;
+  GetComplex(ComplexRequest):ComplexResponse;
 
   // -- test for the compiler generator
 
